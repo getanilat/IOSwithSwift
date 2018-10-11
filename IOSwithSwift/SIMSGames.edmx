@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SIMSGamesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="GameTypes">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="GameTypeName" Type="nvarchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PastHistory">
+          <Key>
+            <PropertyRef Name="GameId" />
+          </Key>
+          <Property Name="GameId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Datetime" Type="datetime" />
+          <Property Name="GameStatus" Type="char" MaxLength="10" />
+          <Property Name="Score" Type="int" />
+          <Property Name="GameTypeId" Type="nvarchar" MaxLength="50" />
+          <Property Name="ActualString" Type="nvarchar" MaxLength="50" />
+          <Property Name="DisplayString" Type="nvarchar" MaxLength="50" />
+          <Property Name="TempDateTime" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="UserRegistration">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WordsList">
+          <Key>
+            <PropertyRef Name="WordId" />
+          </Key>
+          <Property Name="WordId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WordString" Type="nvarchar" MaxLength="255" />
+          <Property Name="WordStringChar" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_PastHistory_UserRegistration">
+          <End Role="UserRegistration" Type="Self.UserRegistration" Multiplicity="1" />
+          <End Role="PastHistory" Type="Self.PastHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRegistration">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="PastHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SIMSGamesModelStoreContainer">
+          <EntitySet Name="GameTypes" EntityType="Self.GameTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PastHistory" EntityType="Self.PastHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRegistration" EntityType="Self.UserRegistration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WordsList" EntityType="Self.WordsList" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PastHistory_UserRegistration" Association="Self.FK_PastHistory_UserRegistration">
+            <End Role="UserRegistration" EntitySet="UserRegistration" />
+            <End Role="PastHistory" EntitySet="PastHistory" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SIMSGamesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="GameType">
+          <Key>
+            <PropertyRef Name="TypeID" />
+          </Key>
+          <Property Name="TypeID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GameTypeName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserRegistration">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PastHistories" Relationship="SIMSGamesModel.FK_PastHistory_UserRegistration" FromRole="UserRegistration" ToRole="PastHistory" />
+        </EntityType>
+        <EntityContainer Name="SIMSGamesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="GameTypes" EntityType="Self.GameType" />
+          <EntitySet Name="UserRegistrations" EntityType="Self.UserRegistration" />
+          <EntitySet Name="WordsLists" EntityType="SIMSGamesModel.WordsList" />
+          <EntitySet Name="PastHistories" EntityType="SIMSGamesModel.PastHistory" />
+          <AssociationSet Name="FK_PastHistory_UserRegistration" Association="SIMSGamesModel.FK_PastHistory_UserRegistration">
+            <End Role="UserRegistration" EntitySet="UserRegistrations" />
+            <End Role="PastHistory" EntitySet="PastHistories" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="WordsList">
+          <Key>
+            <PropertyRef Name="WordId" />
+          </Key>
+          <Property Name="WordId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WordString" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="WordStringChar" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PastHistory">
+          <Key>
+            <PropertyRef Name="GameId" />
+          </Key>
+          <Property Name="GameId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Datetime" Type="DateTime" Precision="3" />
+          <Property Name="GameStatus" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Score" Type="Int32" />
+          <NavigationProperty Name="UserRegistration" Relationship="SIMSGamesModel.FK_PastHistory_UserRegistration" FromRole="PastHistory" ToRole="UserRegistration" />
+          <Property Name="GameTypeId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ActualString" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayString" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TempDateTime" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_PastHistory_UserRegistration">
+          <End Type="SIMSGamesModel.UserRegistration" Role="UserRegistration" Multiplicity="1" />
+          <End Type="SIMSGamesModel.PastHistory" Role="PastHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRegistration">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="PastHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SIMSGamesModelStoreContainer" CdmEntityContainer="SIMSGamesEntities">
+          <EntitySetMapping Name="GameTypes">
+            <EntityTypeMapping TypeName="SIMSGamesModel.GameType">
+              <MappingFragment StoreEntitySet="GameTypes">
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="GameTypeName" ColumnName="GameTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRegistrations">
+            <EntityTypeMapping TypeName="SIMSGamesModel.UserRegistration">
+              <MappingFragment StoreEntitySet="UserRegistration">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WordsLists">
+            <EntityTypeMapping TypeName="SIMSGamesModel.WordsList">
+              <MappingFragment StoreEntitySet="WordsList">
+                <ScalarProperty Name="WordStringChar" ColumnName="WordStringChar" />
+                <ScalarProperty Name="WordString" ColumnName="WordString" />
+                <ScalarProperty Name="WordId" ColumnName="WordId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PastHistories">
+            <EntityTypeMapping TypeName="SIMSGamesModel.PastHistory">
+              <MappingFragment StoreEntitySet="PastHistory">
+                <ScalarProperty Name="TempDateTime" ColumnName="TempDateTime" />
+                <ScalarProperty Name="DisplayString" ColumnName="DisplayString" />
+                <ScalarProperty Name="ActualString" ColumnName="ActualString" />
+                <ScalarProperty Name="GameTypeId" ColumnName="GameTypeId" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="GameStatus" ColumnName="GameStatus" />
+                <ScalarProperty Name="Datetime" ColumnName="Datetime" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="GameId" ColumnName="GameId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
